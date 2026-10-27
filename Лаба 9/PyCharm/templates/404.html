@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Страница не найдена — Зоомагазин{% endblock %}
+
+{% block content %}
+<div style="text-align:center; padding:80px 0;">
+  <h1 style="font-size:100px; color:#2E7D32;">404</h1>
+  <p style="font-size:18px; color:#757575; margin:16px 0 24px;">Такой страницы не существует</p>
+  <a href="{{ url_for('index') }}" class="btn btn-primary">← На главную</a>
+</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Товар — Зоомагазин{% endblock %}
+
+{% block content %}
+<div class="breadcrumbs"><a href="{{ url_for('index') }}">Главная</a> → <a href="{{ url_for('catalog') }}">Каталог</a> → Товар</div>
+
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:32px; background:#fff; border-radius:12px; padding:32px;">
+  <div style="background:#F5F5F5; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:140px; min-height:360px;">🐱</div>
+  <div>
+    <h1>Royal Canin Adult</h1>
+    <p style="color:#757575; margin:8px 0 16px;">Кошки • Royal Canin • 2 кг</p>
+    <span class="badge badge-active">✓ В наличии</span>
+    <p style="font-size:32px; font-weight:700; color:#2E7D32; margin:16px 0;">1 890 ₽</p>
+    <p style="line-height:1.7; color:#444;">Качественный корм для взрослых кошек. Полноценное питание на каждый день.</p>
+    <div style="margin-top:24px; display:flex; gap:12px;">
+      <button class="btn btn-primary">В корзину</button>
+      <a href="{{ url_for('cart') }}" class="btn btn-cta">Перейти в корзину</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

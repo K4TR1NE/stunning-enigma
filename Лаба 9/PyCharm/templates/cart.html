@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Корзина — Зоомагазин{% endblock %}
+
+{% block content %}
+<div class="breadcrumbs"><a href="{{ url_for('index') }}">Главная</a> → Корзина</div>
+<h1>Корзина</h1>
+
+<div style="background:#fff; border-radius:8px; padding:40px; text-align:center; margin-top:20px;">
+  <div style="font-size:64px;">🛒</div>
+  <h2 style="margin:16px 0;">Корзина пуста</h2>
+  <p style="color:#757575; margin-bottom:20px;">Добавьте товары из каталога</p>
+  <a href="{{ url_for('catalog') }}" class="btn btn-primary">Перейти в каталог</a>
+</div>
+{% endblock %}

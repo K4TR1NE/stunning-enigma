@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Админ-панель — Зоомагазин{% endblock %}
+
+{% block content %}
+<h1 style="margin:24px 0 0;">Управление пользователями</h1>
+
+<div class="toolbar">
+  <span>Всего пользователей: <strong>{{ users|length }}</strong></span>
+  <a href="{{ url_for('admin_add') }}" class="btn btn-primary btn-sm">+ Добавить пользователя</a>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th><th>Логин</th><th>Роль</th><th>Статус</th><th>Последний вход</th><th>Действия</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for u in users %}
+      <tr>
+        <td>{{ u.id }}</td>
+        <td>{{ u.login }}</td>
+        <td>
+          <span class="badge {{ 'badge-admin' if u.role == 'admin' else 'badge-user' }}">
+            {{ 'Администратор' if u.role == 'admin' else 'Пользователь' }}
+          </span>
+        </td>
+        <td>
+          {% if u.is_blocked %}
+            <span class="badge badge-blocked">Заблокирован</span>
+          {% else %}
+            <span class="badge badge-active">Активен</span>
+          {% endif %}
+        </td>
+        <td>{{ u.last_login or '—' }}</td>
+        <td>
+          <a href="{{ url_for('admin_edit', user_id=u.id) }}" class="btn btn-secondary btn-sm">Изменить</a>
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

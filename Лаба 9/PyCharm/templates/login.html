@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Вход — Зоомагазин{% endblock %}
+
+{% block content %}
+<style>
+  .captcha-container { margin: 20px 0; padding: 16px; background: #F5F5F5; border-radius: 8px; border: 1px dashed #BDBDBD; }
+  .captcha-title { font-size: 14px; margin-bottom: 12px; font-weight: 500; text-align: center; }
+  .puzzle-board { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; width: 220px; height: 220px; margin: 0 auto; background: #E0E0E0; padding: 4px; border-radius: 8px; }
+  .puzzle-tile { background: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 4px; user-select: none; box-shadow: inset 0 0 0 1px #ccc; overflow: hidden; transition: transform 0.1s; }
+  .puzzle-tile img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+  .puzzle-tile.active { border: 3px solid #2E7D32; transform: scale(0.95); }
+</style>
+
+<!-- ДОБАВЛЕН id="loginForm" -->
+<form class="auth" method="post" action="{{ url_for('login') }}" novalidate id="loginForm">
+  <h1>Вход в систему</h1>
+  <p class="sub">Введите логин, пароль и соберите пазл</p>
+
+  <div class="form-group">
+    <label for="login">Логин</label>
+    <input type="text" id="login" name="login" placeholder="Введите логин" required autofocus>
+  </div>
+  <div class="form-group">
+    <label for="password">Пароль</label>
+    <input type="password" id="password" name="password" placeholder="Введите пароль" required>
+  </div>
+
+  <!-- КАПЧА ПАЗЛ -->
+  <div class="captcha-container">
+    <div class="captcha-title">🔒 Соберите пазл (кликните по двум частям, чтобы поменять их местами):</div>
+    <div class="puzzle-board" id="puzzleBoard">
+      {% for tile_id in captcha_order %}
+        <div class="puzzle-tile" data-id="{{ tile_id }}">
+             <img src="/static/{{ tile_id }}.png" alt="Пазл">
+        </div>
+      {% endfor %}
+    </div>
+    <input type="hidden" name="puzzle_order" id="puzzleOrder" value="{{ captcha_order|join(',') }}">
+  </div>
+
+  <button type="submit" class="btn btn-primary btn-full">Войти</button>
+
+  <div class="auth-links">
+    Нет аккаунта? <a href="{{ url_for('register') }}">Зарегистрироваться</a>
+  </div>
+</form>
+
+<script>
+  window.addEventListener("load", function() {
+    const tiles = document.querySelectorAll('.puzzle-tile');
+    const hiddenInput = document.getElementById('puzzleOrder');
+    const form = document.getElementById('loginForm');
+    let firstTile = null;
+
+    // Логика смены картинок
+    for (let i = 0; i < tiles.length; i++) {
+      tiles[i].addEventListener('click', function() {
+        if (!firstTile) {
+          firstTile = this;
+          this.classList.add('active');
+        } else {
+          if (firstTile !== this) {
+            let tempImg = firstTile.querySelector('img').src;
+            firstTile.querySelector('img').src = this.querySelector('img').src;
+            this.querySelector('img').src = tempImg;
+
+            let tempId = firstTile.dataset.id;
+            firstTile.dataset.id = this.dataset.id;
+            this.dataset.id = tempId;
+          }
+          firstTile.classList.remove('active');
+          firstTile = null;
+        }
+      });
+    }
+
+    // ВАЖНО: Обновляем скрытое поле в момент нажатия на кнопку "Войти"
+    form.addEventListener('submit', function() {
+      let currentOrder = [];
+      for (let j = 0; j < tiles.length; j++) {
+        currentOrder.push(tiles[j].dataset.id);
+      }
+      hiddenInput.value = currentOrder.join(',');
+    });
+  });
+</script>
+{% endblock %}
